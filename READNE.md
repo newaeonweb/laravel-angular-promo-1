@@ -1,4 +1,4 @@
-# Laravel Restful API using Docker/Docker-compose in three steps.
+# Laravel Restful API using Docker in three steps.
 
 In this post serie we will see how to set up an environment for developing Laravel applications using **Docker** and **Docker-compose**. In addition we will see the basic functionalities of **Eloquent ORM** and some relationships between Models. Our goal is to build a **Restful API**.
 
