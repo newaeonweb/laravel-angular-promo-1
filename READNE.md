@@ -1,11 +1,19 @@
-# Preparing the Docker/Docker-compose environment
+# Laravel Restful API using Docker/Docker-compose in three steps.
+
+In this post serie we will see how to set up an environment for developing Laravel applications using **Docker** and **Docker-compose**. In addition we will see the basic functionalities of **Eloquent ORM** and some relationships between Models. Our goal is to build a **Restful API**.
+
+> This post was inpired by the book: [Hands-On Full Stack Web Development with Angular 6 and Laravel 5](https://www.packtpub.com/web-development/hands-full-stack-web-development-angular-6-and-laravel-5), from [Fernando Monteiro](http://newaeonweb.com.br/about/), released on July/2018 by [Packt](https://www.packtpub.com/).
+
+So let's split this tutorial in three steps. Let's see the first step right now:
+
+# 1. Preparing the Docker/Docker-compose environment.
 First we are going to create the foundation (Dockerfile, Docker-compose) files for the application.
 
 1. Create a new folder on your machine.
 2. Inside the  newly created folder, create another folder called **docker**.
 3. Inside the **docker** folder, add two folders, one called: **nginx** and another called: **php-fpm**.
 
-## Setting up Docker, MySQL, Nginx and PHP
+## Setting up Docker, MySQL, Nginx and PHP.
 
 1. Inside the **nginx** folder add the following file called: `nginx.conf` with the following code:
 
@@ -93,7 +101,7 @@ services:
 > You can read more about the docker-compose.yml details on our book:
 
 
-**A special note about the MySQL container configuration: The previous code setting the **storage-db** folder on our _project/machine_ to store all the MyQSL data from the MySQL container.**
+**A special note about the MySQL container configuration: The previous code setting the *storage-db* folder on our _project/machine_ to store all the MyQSL data from the MySQL container.**
 
 The final structure will be the following:
 
@@ -109,9 +117,7 @@ project-folder
 
 ```
 
-So far we have everything to start to build our application.
-
-# Using Composer to create a Laravel application using Docker.
+## Using Composer to create a Laravel application inside Docker container.
 Now that we created a solid base on our servers. The PHP image we used already has all the dependencies that Laravel needs to run the application including **Composer**.
 
 So we will use the Composer that we have inside the **php-fpm** container, this is the safest way to avoid conflicts between your machine/container Composer versions.
@@ -133,10 +139,7 @@ So we will use the Composer that we have inside the **php-fpm** container, this 
 project-folder
     /docker/
     /server/
-    .gitignore
     docker-compose.yml
-    README.md
-
 ```
 
 Notice that we have separated the contents of the Laravel application from the **Docker** configuration folder. This practice is highly recommended since we can make any kind of changes within the project folder without damaging any Docker or docker-compose files accidentally.
@@ -189,9 +192,9 @@ Now let's check the Laravel instalation and configuration, open your default bro
 
 Great! Congratulations you should see the Laravel welcome page.
 
-## Configuring the .env file.
+## Configuring the `.env` file.
 
-2. Open `.env` file at the root of **project** folder and replace the database config, for the following lines:
+1. Open `.env` file at the root of **project** folder and replace the database config, for the following lines:
 
 ```
   DB_CONNECTION=mysql
@@ -204,15 +207,15 @@ Great! Congratulations you should see the Laravel welcome page.
 
 Let's check the connection.
 
-3. Inside the Terminal window type the following command to go inside the **php-fpm bash**:
+2. Inside the Terminal window type the following command to go inside the **php-fpm bash**:
 
   `docker-compose exec php-fpm bash`
 
-4. Inside the `php-fpm bash`, type the following command:
+3. Inside the `php-fpm bash`, type the following command:
 
   `php artisan tinker`
 
-5. And finally, type the folloiwng command: `DB::connection()->getPdo();`, you must see something similar to the following output:
+4. And finally, type the folloiwng command: `DB::connection()->getPdo();`, you must see something similar to the following output:
 
 ```
 => PDO {#760
@@ -239,7 +242,7 @@ Let's check the connection.
 
 This means everything goes well. Congratulation we have a database up and running.
 
-# Creating Migrations and Database seed.
+## Creating Migrations and Database seed.
 Now, the funny part will start right now, let's create a Model.
 
 > Remember you should running every `Artisan` command inside the **php-fpm** bash to avoid compatibility issues.
@@ -257,7 +260,7 @@ Note the flag `-m` that we are using to create the migration file together with 
 * `server/app/Band.php`
 * `server/database/migrations/###_##_##_######_create_bands_table.php`
 
-## Creating the migration boilerplate
+### Creating the migration boilerplate
 The newly created files only have the boilerplate code generated by Laravel engine. Let's add some content to Band Model and migration file.
 
 3. Open `server/app/Band.php` and add the following code, inside the Band Model function:
@@ -300,13 +303,13 @@ Migrating: ####_##_##_######_create_bands_table
 Migrated:  ####_##_##_######_create_bands_table
 ```
 
-## Creating our first database seed using JSON
+### Creating our first database seed using a JSON file
 
 Instead use the popular Faker library to create our data, we will use an external JSON file with the data we want to insert into our database.
 Although Faker is a very useful tool, easy and fast to create data during the development of applications with Laravel. In this example we want to keep the control over the data created.
 
-5. Inside the `server/database` folder, create a new folder called: **data-sample**.
-6. Inside the `server/database/data-sample` folder, create a new file called: `bands.json` and add the following code:
+1. Inside the `server/database` folder, create a new folder called: **data-sample**.
+2. Inside the `server/database/data-sample` folder, create a new file called: `bands.json` and add the following code:
 
 ```json
 
@@ -329,13 +332,13 @@ Although Faker is a very useful tool, easy and fast to create data during the de
 
 ```
 
-7. Now it's time to create our seed file, on your Terminal window type the following command:
+3. Now it's time to create our seed file, on your Terminal window type the following command:
 
 `php artisan make:seeder BandsTableSeeder`
 
 The previous command added a new file called: **BandsTableSeeder.php** inside: `server/database/seeds` folder.
 
-8. Open `server/database/seeds/BandsTableSeeder.php` and replace the code for the following block of code:
+4. Open `server/database/seeds/BandsTableSeeder.php` and replace the code for the following block of code:
 
 ```php
 
@@ -369,30 +372,34 @@ The previous command added a new file called: **BandsTableSeeder.php** inside: `
 
 Note the first line we using the Eloquent ORM shortcut `(DB::table())` to previously delete the bands tables if exist. On next post we go deeper on Eloquent ORM, for now let's focus on create our first seed.
 
-9. Open `server/database/seeds/DatabaseSeeder.php` and add the following line of code, right after the `UsersTableSeeder` comment:
+5. Open `server/database/seeds/DatabaseSeeder.php` and add the following line of code, right after the `UsersTableSeeder` comment:
 
 ```php
-
   $this->call(BikesTableSeeder::class);
-
 ```
 
-Now is time to running our seed and fill the database. We can do this in two ways, we can just run the BandSeeder command: `php artisan db:seed --class=BandsTableSeeder` individually or use the command: `php artisan db:seed` that will run all seeds.
+> You can read more about **Eloquent ORM** at [chapter 5 - Creating a Restful API using Laravel Framework (Part I)](https://github.com/newaeonweb/Hands-On-Full-Stack-Web-Development-with-Angular-6-and-Laravel-5#chapter-5-creating-a-restful-api-using-laravel-framework-part-i).
+
+Now is time to running our seed and fill the database. We can do this in two ways, we can just run the **BandSeeder** command: `php artisan db:seed --class=BandsTableSeeder` individually or use the command: `php artisan db:seed` that will run all seeds in our project.
 
 As we are at the beginning of our development we will execute the command to load all the seeds.
 
-10. Open your Terminal window and type the following command:
+6. Open your Terminal window and type the following command:
 
   `php artisan db:seed`
 
-At the end of the previous command we see a success message **Seeding: BandsTableSeeder**, Bravo! now we have our first records on ower database. Let's check the records.
+At the end of the previous command we see a success message **Seeding: BandsTableSeeder**, Bravo! now we have our first records on our database. Let's check the records.
 
-11. Still on you terminal window, type the tinker command:
+7. Still on you terminal window, type the `tinker` command:
 
   `php artisan tinker`
 
-12. Now let's check our database table with the following command:
+8. Now let's check our database table with the following command:
 
   `DB::table('bands')->get();`
 
----
+The output on terminal window will be something like a JSON representing the three records with our bands.
+
+> This post was inpired by the book: [Hands-On Full Stack Web Development with Angular 6 and Laravel 5](https://www.packtpub.com/web-development/hands-full-stack-web-development-angular-6-and-laravel-5), from [Fernando Monteiro](http://newaeonweb.com.br/about/), released on July/2018 by [Packt](https://www.packtpub.com/).
+
+Continues on the next post...
