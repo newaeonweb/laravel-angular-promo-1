@@ -1,16 +1,20 @@
-[{
-	"id": 1,
-	"name": "Motorhead",
-	"country": "England",
-	"genre": "Heavy Metal"
-}, {
-	"id": 2,
-	"name": "Slayer",
-	"country": "USA",
-	"genre": "Thrash Metal"
-}, {
-	"id": 3,
-	"name": "Truckfighters",
-	"country": "Sweeden",
-	"genre": "Stoner"
-}]
+[
+	{
+		"id": 1,
+		"name": "Motorhead",
+		"country": "England",
+		"genre": "Heavy Metal"
+	},
+	{
+		"id": 2,
+		"name": "Slayer",
+		"country": "USA",
+		"genre": "Thrash Metal"
+	},
+	{
+		"id": 3,
+		"name": "Truckfighters",
+		"country": "Sweeden",
+		"genre": "Stoner"
+	}
+]

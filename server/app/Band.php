@@ -12,4 +12,8 @@ class Band extends Model
     'country',
     'genre'
   ];
+
+  public function albums() {
+    return $this->hasMany('App\Album');
+  }
 }
